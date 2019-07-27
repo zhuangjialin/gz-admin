@@ -1,7 +1,7 @@
 # icm-admin
 系统基础管理服务：
 用户、权限、菜单、基础管理服务
-1111
+
 icm-admin
 	├─src
 	│  └─main
@@ -48,5 +48,3 @@ icm-admin
 	│   ├─admin.jar.original				// 原始jar，不带lib依赖
 	│   └─icm-admin-dev.tar.gz				// 可运行包，包含启动命令
 	└─pom.xml								// pom 文件
-	
-	

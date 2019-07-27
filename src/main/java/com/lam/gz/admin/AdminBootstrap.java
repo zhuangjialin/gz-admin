@@ -21,7 +21,7 @@ import com.lam.gz.mybatis.EnableMybatis;
 @EnableImpexp
 public class AdminBootstrap {
 	public static void main(String[] args) {
-			//test
+
 		new SpringApplicationBuilder(AdminBootstrap.class).web(true).run(args);
 	}
 }

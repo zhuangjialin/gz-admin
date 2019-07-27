@@ -72,7 +72,7 @@ public class VideoController extends BaseController {
 	 */
 	@OperateLog(oper=Operation.SINGLE_QUERY, parameterType=ParameterType.QUERY)
 	@ResponseBody
-	//@RequestMapping(value="find", method=RequestMethod.GET)
+	@RequestMapping(value="find", method=RequestMethod.GET)
 	public ResultResponse find(VideoVo vo){
 
 		VideoEntity entity = videoService.find(vo);

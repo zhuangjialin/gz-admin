@@ -29,7 +29,7 @@
             AND t.id = #{obj.id}
         </if>
         <if test="obj.menuName != null and obj.menuName != ''">
-            AND t.menu_name = #{obj.menuName}
+            AND t.menu_name like concat('%', #{obj.menuName}, '%')
         </if>
         <if test="obj.sort != null">
             AND t.sort = #{obj.sort}
@@ -88,8 +88,7 @@
 		select 
 			<include refid="selectColumn"/>
 		from gz_menu as t 
-		where t.id=#{id} and t.atv_flag = 1
-			AND t.tenant_id = #{tenantId}
+		where t.id=#{id} 
 		limit 1
 	</select>
 	
