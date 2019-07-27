@@ -42,10 +42,10 @@
             AND t.number_steps = #{obj.numberSteps}
         </if>
         <if test="obj.principal != null and obj.principal != ''">
-            AND t.principal = #{obj.principal}
+            AND t.principal like concat('%', #{obj.principal}, '%')
         </if>
         <if test="obj.phone != null and obj.phone != ''">
-            AND t.phone = #{obj.phone}
+            AND t.phone like concat('%', #{obj.phone}, '%')
         </if>
         <if test="obj.description != null and obj.description != ''">
             AND t.description = #{obj.description}

@@ -31,7 +31,7 @@
             AND t.id = #{obj.id}
         </if>
         <if test="obj.guideName != null and obj.guideName != ''">
-            AND t.guide_name = #{obj.guideName}
+            AND t.guide_name like concat('%', #{obj.guideName}, '%')
         </if>
         <if test="obj.guideIcon != null and obj.guideIcon != ''">
             AND t.guide_icon = #{obj.guideIcon}
@@ -61,7 +61,7 @@
             AND t.guide_content = #{obj.guideContent}
         </if>
         <if test="obj.guideTitle != null and obj.guideTitle != ''">
-            AND t.guide_title = #{obj.guideTitle}
+            AND t.guide_title like concat('%', #{obj.guideTitle}, '%')
         </if>
         <if test="obj.guideUrl != null and obj.guideUrl != ''">
             AND t.guide_url = #{obj.guideUrl}

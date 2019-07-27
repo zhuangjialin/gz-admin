@@ -30,7 +30,7 @@
             AND t.id = #{obj.id}
         </if>
         <if test="obj.fileName != null and obj.fileName != ''">
-            AND t.file_name = #{obj.fileName}
+            AND t.file_name like concat('%', #{obj.fileName}, '%')
         </if>
         <if test="obj.articleContentUrl != null and obj.articleContentUrl != ''">
             AND t.article_content_url = #{obj.articleContentUrl}

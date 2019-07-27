@@ -27,7 +27,7 @@
             AND t.id = #{obj.id}
         </if>
         <if test="obj.classificationName != null and obj.classificationName != ''">
-            AND t.classification_name = #{obj.classificationName}
+            AND t.classification_name like concat('%', #{obj.classificationName}, '%')
         </if>
         <if test="obj.sort != null">
             AND t.sort = #{obj.sort}
