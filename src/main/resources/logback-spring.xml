@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <configuration scan="true" scanPeriod="60 seconds" debug="false">
 
+	<property resource="application.yml" />
     <!--定义日志文件的存储地址 勿在 LogBack 的配置中使用相对路径-->
-    <property name="LOG_HOME" value="${log.home}"/>
-    <property name="APP_NAME" value="${project.artifactId}"/>
+    <property name="LOG_HOME" value="@log.home@"/>
+    <property name="APP_NAME" value="@project.artifactId@"/>
     <property name="LOG_PATH" value="${LOG_HOME}/${APP_NAME}"/>
-    <property name="FILE_NAME" value="${project.build.finalName}"/>
+    <property name="FILE_NAME" value="@project.build.finalName@"/>
     <!-- <springProperty scope="context" name="appName" source="spring.application.name"/> -->
 
     <!-- 彩色日志 -->
