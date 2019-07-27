@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper 
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lam.gz.admin.gz.dao.GzMenuDao">
+
+	<sql id="selectColumn">
+		t.id as id,
+		t.menu_name as menuName,
+		t.sort as sort,
+		t.menu_url as menuUrl,
+		t.menu_content as menuContent,
+		DATE_FORMAT(t.create_time,'%Y-%m-%d %H:%i:%s') as createTime,
+		DATE_FORMAT(t.update_time,'%Y-%m-%d %H:%i:%s') as updateTime
+	</sql>
+	
+	<select id="list" parameterType="com.lam.gz.admin.gz.vo.GzMenuVo"
+		resultType="com.lam.gz.admin.gz.entity.GzMenuEntity">
+		select 
+			<include refid="selectColumn"/>
+		from gz_menu as t
+		<where>
+			<include refid="queryCondition"/>
+		</where>
+	</select>
+		
+	<sql id="queryCondition">
+        <if test="obj.id != null">
+            AND t.id = #{obj.id}
+        </if>
+        <if test="obj.menuName != null and obj.menuName != ''">
+            AND t.menu_name = #{obj.menuName}
+        </if>
+        <if test="obj.sort != null">
+            AND t.sort = #{obj.sort}
+        </if>
+        <if test="obj.menuUrl != null and obj.menuUrl != ''">
+            AND t.menu_url = #{obj.menuUrl}
+        </if>
+        <if test="obj.menuContent != null and obj.menuContent != ''">
+            AND t.menu_content = #{obj.menuContent}
+        </if>
+        <if test="obj.createTime != null">
+            AND t.create_time = #{obj.createTime}
+        </if>
+		<if test="obj.createTimeStart != null and obj.createTimeStart != ''">
+            AND t.create_time <![CDATA[>=]]> #{obj.createTimeStart}
+        </if>
+        <if test="obj.createTimeEnd != null and obj.createTimeEnd != ''">
+            AND t.create_time <![CDATA[<=]]> #{obj.createTimeEnd}
+        </if>
+        <if test="obj.updateTime != null">
+            AND t.update_time = #{obj.updateTime}
+        </if>
+		<if test="obj.updateTimeStart != null and obj.updateTimeStart != ''">
+            AND t.update_time <![CDATA[>=]]> #{obj.updateTimeStart}
+        </if>
+        <if test="obj.updateTimeEnd != null and obj.updateTimeEnd != ''">
+            AND t.update_time <![CDATA[<=]]> #{obj.updateTimeEnd}
+        </if>
+	</sql>
+	
+	<select id="listByPage" parameterType="java.util.HashMap"
+		resultType="com.lam.gz.admin.gz.entity.GzMenuEntity">
+		select 
+			<include refid="selectColumn"/>
+		from gz_menu as t
+		<where>
+			<include refid="queryCondition"/>
+		</where>
+		<if test="page.orderBy != null and page.orderBy != ''">
+			order by ${page.orderBy} ${page.orderType} 
+		</if>
+		limit #{page.offset},#{page.rows}
+	</select>
+	
+	<!-- <select id="listByPageCount" parameterType="java.util.HashMap" resultType="int">
+		select 
+			count(1) as count
+		from gz_menu as t
+		<trim prefix="WHERE" prefixOverrides="AND |OR ">
+			<include refid="queryCondition"/>
+		</trim>
+	</select> -->
+	
+	<select id="find" parameterType="com.lam.gz.admin.gz.vo.GzMenuVo" 
+		resultType="com.lam.gz.admin.gz.entity.GzMenuEntity">
+		select 
+			<include refid="selectColumn"/>
+		from gz_menu as t 
+		where t.id=#{id} and t.atv_flag = 1
+			AND t.tenant_id = #{tenantId}
+		limit 1
+	</select>
+	
+	<sql id="insertField">
+			menu_name,
+			sort,
+			menu_url,
+			menu_content,
+			create_time,
+			update_time
+	</sql>
+		
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.lam.gz.admin.gz.entity.GzMenuEntity">
+		insert into gz_menu(
+			<include refid="insertField"></include>
+		) values (
+            #{menuName},
+            #{sort},
+            #{menuUrl},
+            #{menuContent},
+            now(),
+            now()
+		)
+	</insert>
+	
+	<!--
+	<insert id="insertBatch" parameterType="java.util.List">
+		insert into gz_menu(
+			<include refid="insertField"></include>
+		) values 
+		<foreach collection="list" item="item" separator=",">
+		(
+            #{item.menuName},
+            #{item.sort},
+            #{item.menuUrl},
+            #{item.menuContent},
+            now(),
+            now()
+		)
+		</foreach>
+	</insert>
+	-->
+	
+	<update id="update" parameterType="com.lam.gz.admin.gz.entity.GzMenuEntity">
+		update gz_menu 
+		<set>
+            <if test="menuName != null">
+                menu_name = #{menuName},
+            </if>
+            <if test="sort != null">
+                sort = #{sort},
+            </if>
+            <if test="menuUrl != null">
+                menu_url = #{menuUrl},
+            </if>
+            <if test="menuContent != null">
+                menu_content = #{menuContent},
+            </if>
+            update_time = now(),
+		</set>
+		where id=#{id} 
+	</update>
+	
+	<delete id="deleteLogic" parameterType="com.lam.gz.admin.gz.vo.GzMenuVo">
+		delete from gz_menu 
+		where id=#{id} 
+	</delete>
+	
+</mapper>

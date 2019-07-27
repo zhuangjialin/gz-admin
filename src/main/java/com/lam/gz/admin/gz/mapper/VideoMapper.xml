@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper 
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lam.gz.admin.gz.dao.VideoDao">
+
+	<sql id="selectColumn">
+		t.id as id,
+		t.video_catory as videoCatory,
+		t.class_hour as classHour,
+		t.number_steps as numberSteps,
+		t.principal as principal,
+		t.phone as phone,
+		t.description as description,
+		t.sort as sort,
+		DATE_FORMAT(t.create_time,'%Y-%m-%d %H:%i:%s') as createTime,
+		DATE_FORMAT(t.update_time,'%Y-%m-%d %H:%i:%s') as updateTime,
+		t.video_url as videoUrl
+	</sql>
+	
+	<select id="list" parameterType="com.lam.gz.admin.gz.vo.VideoVo"
+		resultType="com.lam.gz.admin.gz.entity.VideoEntity">
+		select 
+			<include refid="selectColumn"/>
+		from gz_video as t
+		<where>
+			<include refid="queryCondition"/>
+		</where>
+	</select>
+		
+	<sql id="queryCondition">
+        <if test="obj.id != null">
+            AND t.id = #{obj.id}
+        </if>
+        <if test="obj.videoCatory != null and obj.videoCatory != ''">
+            AND t.video_catory = #{obj.videoCatory}
+        </if>
+        <if test="obj.classHour != null">
+            AND t.class_hour = #{obj.classHour}
+        </if>
+        <if test="obj.numberSteps != null">
+            AND t.number_steps = #{obj.numberSteps}
+        </if>
+        <if test="obj.principal != null and obj.principal != ''">
+            AND t.principal = #{obj.principal}
+        </if>
+        <if test="obj.phone != null and obj.phone != ''">
+            AND t.phone = #{obj.phone}
+        </if>
+        <if test="obj.description != null and obj.description != ''">
+            AND t.description = #{obj.description}
+        </if>
+        <if test="obj.sort != null">
+            AND t.sort = #{obj.sort}
+        </if>
+        <if test="obj.createTime != null">
+            AND t.create_time = #{obj.createTime}
+        </if>
+		<if test="obj.createTimeStart != null and obj.createTimeStart != ''">
+            AND t.create_time <![CDATA[>=]]> #{obj.createTimeStart}
+        </if>
+        <if test="obj.createTimeEnd != null and obj.createTimeEnd != ''">
+            AND t.create_time <![CDATA[<=]]> #{obj.createTimeEnd}
+        </if>
+        <if test="obj.updateTime != null">
+            AND t.update_time = #{obj.updateTime}
+        </if>
+		<if test="obj.updateTimeStart != null and obj.updateTimeStart != ''">
+            AND t.update_time <![CDATA[>=]]> #{obj.updateTimeStart}
+        </if>
+        <if test="obj.updateTimeEnd != null and obj.updateTimeEnd != ''">
+            AND t.update_time <![CDATA[<=]]> #{obj.updateTimeEnd}
+        </if>
+        <if test="obj.videoUrl != null and obj.videoUrl != ''">
+            AND t.video_url = #{obj.videoUrl}
+        </if>
+	</sql>
+	
+	<select id="listByPage" parameterType="java.util.HashMap"
+		resultType="com.lam.gz.admin.gz.entity.VideoEntity">
+		select 
+			<include refid="selectColumn"/>
+		from gz_video as t
+		<where>
+			<include refid="queryCondition"/>
+		</where>
+		<if test="page.orderBy != null and page.orderBy != ''">
+			order by ${page.orderBy} ${page.orderType} 
+		</if>
+		limit #{page.offset},#{page.rows}
+	</select>
+	
+	<!-- <select id="listByPageCount" parameterType="java.util.HashMap" resultType="int">
+		select 
+			count(1) as count
+		from gz_video as t
+		<trim prefix="WHERE" prefixOverrides="AND |OR ">
+			<include refid="queryCondition"/>
+		</trim>
+	</select> -->
+	
+	<select id="find" parameterType="com.lam.gz.admin.gz.vo.VideoVo" 
+		resultType="com.lam.gz.admin.gz.entity.VideoEntity">
+		select 
+			<include refid="selectColumn"/>
+		from gz_video as t 
+		where t.id=#{id}
+		limit 1
+	</select>
+	
+	<sql id="insertField">
+			video_catory,
+			class_hour,
+			number_steps,
+			principal,
+			phone,
+			description,
+			sort,
+			create_time,
+			update_time,
+			video_url
+	</sql>
+		
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.lam.gz.admin.gz.entity.VideoEntity">
+		insert into gz_video(
+			<include refid="insertField"></include>
+		) values (
+            #{videoCatory},
+            #{classHour},
+            #{numberSteps},
+            #{principal},
+            #{phone},
+            #{description},
+            #{sort},
+            now(),
+            now(),
+            #{videoUrl}
+		)
+	</insert>
+	
+	<!--
+	<insert id="insertBatch" parameterType="java.util.List">
+		insert into gz_video(
+			<include refid="insertField"></include>
+		) values 
+		<foreach collection="list" item="item" separator=",">
+		(
+            #{item.videoCatory},
+            #{item.classHour},
+            #{item.numberSteps},
+            #{item.principal},
+            #{item.phone},
+            #{item.description},
+            #{item.sort},
+            now(),
+            now(),
+            #{item.videoUrl}
+		)
+		</foreach>
+	</insert>
+	-->
+	
+	<update id="update" parameterType="com.lam.gz.admin.gz.entity.VideoEntity">
+		update gz_video 
+		<set>
+            <if test="videoCatory != null">
+                video_catory = #{videoCatory},
+            </if>
+            <if test="classHour != null">
+                class_hour = #{classHour},
+            </if>
+            <if test="numberSteps != null">
+                number_steps = #{numberSteps},
+            </if>
+            <if test="principal != null">
+                principal = #{principal},
+            </if>
+            <if test="phone != null">
+                phone = #{phone},
+            </if>
+            <if test="description != null">
+                description = #{description},
+            </if>
+            <if test="sort != null">
+                sort = #{sort},
+            </if>
+            <if test="videoUrl != null">
+                video_url = #{videoUrl},
+            </if>
+            update_time = now(),
+		</set>
+		where id=#{id} 
+	</update>
+	
+	<delete id="deleteLogic" parameterType="com.lam.gz.admin.gz.vo.VideoVo">
+		delete from gz_video 
+		where id=#{id} 
+	</delete>
+	
+</mapper>

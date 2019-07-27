@@ -1,0 +1,23 @@
+package com.lam.gz.mybatis.statical;
+
+import javax.sql.DataSource;
+
+import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+/**
+ * @author liubo
+ *
+ */
+@Configuration
+public class SingleDataSource {
+	
+	@Bean(name = "dataSource")  
+    @ConfigurationProperties(prefix = "datasource")   
+    public DataSource dataSource() {  
+        return DataSourceBuilder.create().build();  
+    } 
+
+}

@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper 
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lam.gz.admin.gz.dao.FileDownloadDao">
+
+	<sql id="selectColumn">
+		t.id as id,
+		t.file_name as fileName,
+		t.article_content_url as articleContentUrl,
+		t.sort as sort,
+		t.style as style,
+		t.gz_classification_id as gzClassificationId,
+		DATE_FORMAT(t.create_time,'%Y-%m-%d %H:%i:%s') as createTime,
+		DATE_FORMAT(t.update_time,'%Y-%m-%d %H:%i:%s') as updateTime
+	</sql>
+	
+	<select id="list" parameterType="com.lam.gz.admin.gz.vo.FileDownloadVo"
+		resultType="com.lam.gz.admin.gz.entity.FileDownloadEntity">
+		select 
+			<include refid="selectColumn"/>
+		from gz_file_download as t
+		<where>
+			<include refid="queryCondition"/>
+		</where>
+	</select>
+		
+	<sql id="queryCondition">
+        <if test="obj.id != null">
+            AND t.id = #{obj.id}
+        </if>
+        <if test="obj.fileName != null and obj.fileName != ''">
+            AND t.file_name = #{obj.fileName}
+        </if>
+        <if test="obj.articleContentUrl != null and obj.articleContentUrl != ''">
+            AND t.article_content_url = #{obj.articleContentUrl}
+        </if>
+        <if test="obj.sort != null">
+            AND t.sort = #{obj.sort}
+        </if>
+        <if test="obj.style != null">
+            AND t.style = #{obj.style}
+        </if>
+        <if test="obj.gzClassificationId != null">
+            AND t.gz_classification_id = #{obj.gzClassificationId}
+        </if>
+        <if test="obj.createTime != null">
+            AND t.create_time = #{obj.createTime}
+        </if>
+		<if test="obj.createTimeStart != null and obj.createTimeStart != ''">
+            AND t.create_time <![CDATA[>=]]> #{obj.createTimeStart}
+        </if>
+        <if test="obj.createTimeEnd != null and obj.createTimeEnd != ''">
+            AND t.create_time <![CDATA[<=]]> #{obj.createTimeEnd}
+        </if>
+        <if test="obj.updateTime != null">
+            AND t.update_time = #{obj.updateTime}
+        </if>
+		<if test="obj.updateTimeStart != null and obj.updateTimeStart != ''">
+            AND t.update_time <![CDATA[>=]]> #{obj.updateTimeStart}
+        </if>
+        <if test="obj.updateTimeEnd != null and obj.updateTimeEnd != ''">
+            AND t.update_time <![CDATA[<=]]> #{obj.updateTimeEnd}
+        </if>
+	</sql>
+	
+	<select id="listByPage" parameterType="java.util.HashMap"
+		resultType="com.lam.gz.admin.gz.entity.FileDownloadEntity">
+		select 
+			<include refid="selectColumn"/>
+		from gz_file_download as t
+		<where>
+			<include refid="queryCondition"/>
+		</where>
+		<if test="page.orderBy != null and page.orderBy != ''">
+			order by ${page.orderBy} ${page.orderType} 
+		</if>
+		limit #{page.offset},#{page.rows}
+	</select>
+	
+	<!-- <select id="listByPageCount" parameterType="java.util.HashMap" resultType="int">
+		select 
+			count(1) as count
+		from gz_file_download as t
+		<trim prefix="WHERE" prefixOverrides="AND |OR ">
+			<include refid="queryCondition"/>
+		</trim>
+	</select> -->
+	
+	<select id="find" parameterType="com.lam.gz.admin.gz.vo.FileDownloadVo" 
+		resultType="com.lam.gz.admin.gz.entity.FileDownloadEntity">
+		select 
+			<include refid="selectColumn"/>
+		from gz_file_download as t 
+		where t.id=#{id} 
+		limit 1
+	</select>
+	
+	<sql id="insertField">
+			file_name,
+			article_content_url,
+			sort,
+			style,
+			gz_classification_id,
+			create_time,
+			update_time
+	</sql>
+		
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.lam.gz.admin.gz.entity.FileDownloadEntity">
+		insert into gz_file_download(
+			<include refid="insertField"></include>
+		) values (
+            #{fileName},
+            #{articleContentUrl},
+            #{sort},
+            #{style},
+            #{gzClassificationId},
+            now(),
+            now()
+		)
+	</insert>
+	
+	<!--
+	<insert id="insertBatch" parameterType="java.util.List">
+		insert into gz_file_download(
+			<include refid="insertField"></include>
+		) values 
+		<foreach collection="list" item="item" separator=",">
+		(
+            #{item.fileName},
+            #{item.articleContentUrl},
+            #{item.sort},
+            #{item.style},
+            #{item.gzClassificationId},
+            now(),
+            now()
+		)
+		</foreach>
+	</insert>
+	-->
+	
+	<update id="update" parameterType="com.lam.gz.admin.gz.entity.FileDownloadEntity">
+		update gz_file_download 
+		<set>
+            <if test="fileName != null">
+                file_name = #{fileName},
+            </if>
+            <if test="articleContentUrl != null">
+                article_content_url = #{articleContentUrl},
+            </if>
+            <if test="sort != null">
+                sort = #{sort},
+            </if>
+            <if test="style != null">
+                style = #{style},
+            </if>
+            <if test="gzClassificationId != null">
+                gz_classification_id = #{gzClassificationId},
+            </if>
+            update_time = now(),
+		</set>
+		where id=#{id}
+	</update>
+	
+	<delete id="deleteLogic" parameterType="com.lam.gz.admin.gz.vo.FileDownloadVo">
+		delete from gz_file_download 
+		where id=#{id}
+	</delete>
+	
+</mapper>

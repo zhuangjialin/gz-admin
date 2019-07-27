@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper 
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lam.gz.admin.gz.dao.FileClassificationDao">
+
+	<sql id="selectColumn">
+		t.id as id,
+		t.classification_name as classificationName,
+		t.sort as sort,
+		DATE_FORMAT(t.create_time,'%Y-%m-%d %H:%i:%s') as createTime,
+		DATE_FORMAT(t.update_time,'%Y-%m-%d %H:%i:%s') as updateTime
+	</sql>
+	
+	<select id="list" parameterType="com.lam.gz.admin.gz.vo.FileClassificationVo"
+		resultType="com.lam.gz.admin.gz.entity.FileClassificationEntity">
+		select 
+			<include refid="selectColumn"/>
+		from gz_file_classification as t
+		<where>
+			<include refid="queryCondition"/>
+		</where>
+	</select>
+		
+	<sql id="queryCondition">
+        <if test="obj.id != null">
+            AND t.id = #{obj.id}
+        </if>
+        <if test="obj.classificationName != null and obj.classificationName != ''">
+            AND t.classification_name = #{obj.classificationName}
+        </if>
+        <if test="obj.sort != null">
+            AND t.sort = #{obj.sort}
+        </if>
+        <if test="obj.createTime != null">
+            AND t.create_time = #{obj.createTime}
+        </if>
+		<if test="obj.createTimeStart != null and obj.createTimeStart != ''">
+            AND t.create_time <![CDATA[>=]]> #{obj.createTimeStart}
+        </if>
+        <if test="obj.createTimeEnd != null and obj.createTimeEnd != ''">
+            AND t.create_time <![CDATA[<=]]> #{obj.createTimeEnd}
+        </if>
+        <if test="obj.updateTime != null">
+            AND t.update_time = #{obj.updateTime}
+        </if>
+		<if test="obj.updateTimeStart != null and obj.updateTimeStart != ''">
+            AND t.update_time <![CDATA[>=]]> #{obj.updateTimeStart}
+        </if>
+        <if test="obj.updateTimeEnd != null and obj.updateTimeEnd != ''">
+            AND t.update_time <![CDATA[<=]]> #{obj.updateTimeEnd}
+        </if>
+	</sql>
+	
+	<select id="listByPage" parameterType="java.util.HashMap"
+		resultType="com.lam.gz.admin.gz.entity.FileClassificationEntity">
+		select 
+			<include refid="selectColumn"/>
+		from gz_file_classification as t
+		<where>
+			<include refid="queryCondition"/>
+		</where>
+		<if test="page.orderBy != null and page.orderBy != ''">
+			order by ${page.orderBy} ${page.orderType} 
+		</if>
+		limit #{page.offset},#{page.rows}
+	</select>
+	
+	<!-- <select id="listByPageCount" parameterType="java.util.HashMap" resultType="int">
+		select 
+			count(1) as count
+		from gz_file_classification as t
+		<trim prefix="WHERE" prefixOverrides="AND |OR ">
+			<include refid="queryCondition"/>
+		</trim>
+	</select> -->
+	
+	<select id="find" parameterType="com.lam.gz.admin.gz.vo.FileClassificationVo" 
+		resultType="com.lam.gz.admin.gz.entity.FileClassificationEntity">
+		select 
+			<include refid="selectColumn"/>
+		from gz_file_classification as t 
+		where t.id=#{id} 
+		limit 1
+	</select>
+	
+	<sql id="insertField">
+			classification_name,
+			sort,
+			create_time,
+			update_time
+	</sql>
+		
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.lam.gz.admin.gz.entity.FileClassificationEntity">
+		insert into gz_file_classification(
+			<include refid="insertField"></include>
+		) values (
+            #{classificationName},
+            #{sort},
+            now(),
+            now()
+		)
+	</insert>
+	
+	<!--
+	<insert id="insertBatch" parameterType="java.util.List">
+		insert into gz_file_classification(
+			<include refid="insertField"></include>
+		) values 
+		<foreach collection="list" item="item" separator=",">
+		(
+            #{item.classificationName},
+            #{item.sort},
+            now(),
+            now()
+		)
+		</foreach>
+	</insert>
+	-->
+	
+	<update id="update" parameterType="com.lam.gz.admin.gz.entity.FileClassificationEntity">
+		update gz_file_classification 
+		<set>
+            <if test="classificationName != null">
+                classification_name = #{classificationName},
+            </if>
+            <if test="sort != null">
+                sort = #{sort},
+            </if>
+            update_time = now(),
+		</set>
+		where id=#{id}
+	</update>
+	
+	<delete id="deleteLogic" parameterType="com.lam.gz.admin.gz.vo.FileClassificationVo">
+		delete from gz_file_classification 
+		where id=#{id} 
+	</delete>
+	
+</mapper>
