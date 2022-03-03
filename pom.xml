@@ -52,7 +52,7 @@
         <activemq.pool.version>5.14.5</activemq.pool.version>
         <feign.core.version>9.5.0</feign.core.version>
         <redis.version>2.9.0</redis.version>
-        <xlsx.streamer.version>1.0.0</xlsx.streamer.version>
+        <xlsx.streamer.version>2.1.0</xlsx.streamer.version>
         <excl.poi.version>3.14</excl.poi.version>
         <quartz.version>2.3.0</quartz.version>
         <persistence-api.version>1.0</persistence-api.version>
